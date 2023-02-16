@@ -1,0 +1,40 @@
+.controls:hover #inserts_btns {
+  opacity: 1;
+}
+
+#inserts_btns {
+  opacity: 0;
+  position: absolute;
+  left: 6px;
+  display: flex;
+  flex-direction: column;
+  top: -1px;
+  transition: opacity 0.5s ease-in;
+  pointer-events: none;
+}
+#inserts_btns span{
+  pointer-events: auto;
+  cursor: pointer;
+  color: #A7B6C2;
+}
+
+#inserts_btns .bp3-icon:first-child {
+  
+}
+
+#inserts_btns .insert-item {
+  height: 20px;
+  width: 24px;
+}
+
+.insert-item {
+  border-bottom: 1px solid;
+}
+
+.insert-item-minus {
+  width: 12px;
+}
+#inserts_btns .place {
+  height: 8px;
+  pointer-events: none;
+}
