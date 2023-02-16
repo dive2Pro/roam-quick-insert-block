@@ -1,14 +1,13 @@
 .controls:hover #inserts_btns {
   opacity: 1;
 }
-
 #inserts_btns {
   opacity: 0;
   position: absolute;
   left: 6px;
   display: flex;
   flex-direction: column;
-  top: -1px;
+  top: -6px;
   transition: opacity 0.5s ease-in;
   pointer-events: none;
 }
@@ -18,8 +17,8 @@
   color: #A7B6C2;
 }
 
-#inserts_btns .bp3-icon:first-child {
-  
+#inserts_btns .bp3-icon:hover {
+  background: #8f99a826;
 }
 
 #inserts_btns .insert-item {
@@ -35,6 +34,6 @@
   width: 12px;
 }
 #inserts_btns .place {
-  height: 8px;
+  height: 17px;
   pointer-events: none;
 }
