@@ -59,6 +59,9 @@ const insertBtns = (parentEl, idStr) => {
   const id = idStr.substr(-9);
   const [block, parentBlock] = api.findBlockAndItsParentBlockByUid(id);
   const focusOnDom = (targetEl) => {
+    if(!targetEl){
+      return
+    }
     targetEl.scrollIntoView(
       { behavior: "smooth", block: "nearest" }
     );
