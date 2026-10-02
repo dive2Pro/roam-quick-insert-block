@@ -49,6 +49,24 @@ const api = {
   }
 };
 let prevIdStr = "";
+
+/**
+ * The +/- buttons live inside `.controls`, which is a child of
+ * `.rm-block-main.rm-block__self`. Read that ancestor's real height and expose it
+ * via a CSS variable so `#inserts_btns` renders exactly as tall as it.
+ */
+const syncBtnsHeight = (el) => {
+  const mainEl = el.closest(".rm-block-main.rm-block__self");
+  if (!mainEl) {
+    el.style.removeProperty("--inserts-btns-height");
+    return;
+  }
+  const height = mainEl.getBoundingClientRect().height;
+  if (height > 0) {
+    el.style.setProperty("--inserts-btns-height", `${height}px`);
+  }
+};
+
 function PlusIcon(props) {
   const [isMouseInside, setMouseInside] = useState(false);
   const mouseEnter = () => {
@@ -71,6 +89,9 @@ const insertBtns = (parentEl, idStr) => {
   const el = document.createElement("div");
   el.id = EL_ID;
   parentEl.appendChild(el);
+  // Keep the plugin's height in sync with the closest
+  // `.rm-block-main.rm-block__self` ancestor so the +/- buttons line up with it.
+  syncBtnsHeight(el);
   const id = idStr.substr(-9);
   const [block, parentBlock] = api.findBlockAndItsParentBlockByUid(id) || [];
   if (!block) {
@@ -114,7 +135,7 @@ const insertBtns = (parentEl, idStr) => {
       focusOnDom(parentEl.closest(".roam-block-container").nextElementSibling);
     }, 100);
   };
-  ReactDOM.render(
+    ReactDOM.render(
     /*#__PURE__*/ React.createElement(
     React.Fragment,
     null,
@@ -134,6 +155,8 @@ const insertBtns = (parentEl, idStr) => {
   ),
     el
   );
+  // React replaces the placeholder, so re-apply the measured height afterwards.
+  syncBtnsHeight(el);
 };
 const removeBtns = () => {
   const target = document.querySelector(`#${EL_ID}`);
@@ -141,6 +164,22 @@ const removeBtns = () => {
     return;
   }
   target.parentElement.removeChild(target);
+};
+let resizeObserver = null;
+const observeBtnsHeight = (el) => {
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+    resizeObserver = null;
+  }
+  if (typeof ResizeObserver === "undefined" || !el) {
+    return;
+  }
+  const mainEl = el.closest(".rm-block-main.rm-block__self");
+  if (!mainEl) {
+    return;
+  }
+  resizeObserver = new ResizeObserver(() => syncBtnsHeight(el));
+  resizeObserver.observe(mainEl);
 };
 const onMouseOver = (e) => {
   let el = e.target.closest(".roam-block-container");
@@ -154,6 +193,7 @@ const onMouseOver = (e) => {
       removeBtns();
       prevIdStr = id;
       insertBtns(el.querySelector(".controls"), id);
+      observeBtnsHeight(document.querySelector(`#${EL_ID}`));
     }
   }
 };
@@ -163,5 +203,11 @@ export default {
   },
   onunload: () => {
     document.removeEventListener("mousemove", onMouseOver);
+    if (resizeObserver) {
+      resizeObserver.disconnect();
+      resizeObserver = null;
+    }
+    prevIdStr = "";
+    removeBtns();
   }
 };

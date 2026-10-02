@@ -8,13 +8,34 @@
   display: flex;
   flex-direction: column;
   top: -6px;
+  /* Match the height of the closest .rm-block-main.rm-block__self ancestor */
+  height: var(--inserts-btns-height, auto);
   transition: opacity 0.5s ease-in;
   pointer-events: none;
+}
+
+/* First / last item stick to the top / bottom edge of that ancestor */
+#inserts_btns > .bp3-icon:first-child {
+  flex: 0 0 auto;
+}
+
+#inserts_btns > .place {
+  flex: 1 1 auto;
+}
+
+#inserts_btns > .bp3-icon:last-child {
+  flex: 0 0 auto;
 }
 #inserts_btns span{
   pointer-events: auto;
   cursor: pointer;
   color: #A7B6C2;
+}
+
+#inserts_btns > .bp3-icon {
+  pointer-events: auto;
+  cursor: pointer;
+  flex: 0 0 auto;
 }
 
 #inserts_btns .bp3-icon:hover {
@@ -34,6 +55,7 @@
   width: 12px;
 }
 #inserts_btns .place {
-  height: 17px;
+  /* The spacer stretches so the two +/- buttons sit on the top and bottom edges */
+  min-height: 17px;
   pointer-events: none;
 }
